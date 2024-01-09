@@ -2786,13 +2786,13 @@ int security_get_user_sids(struct selinux_state *state,
 	struct user_datum *user;
 	struct role_datum *role;
 	struct ebitmap_node *rnode, *tnode;
-	int rc;
+	int rc = 0;
 
 	*sids = NULL;
 	*nel = 0;
 
 	if (!ss_initialized) // SEC_SELINUX_PORTING_COMMON Change to use RKP
-		goto out;
+		goto out_unlock;
 
 	mysids = kcalloc(maxnel, sizeof(*mysids), GFP_KERNEL);
 	if (!mysids)
