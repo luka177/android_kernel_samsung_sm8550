@@ -4367,6 +4367,23 @@ static int can_idmap_mount(const struct mount_kattr *kattr, struct mount *mnt)
 	return 0;
 }
 
+/**
+ * mnt_allow_writers() - check whether the attribute change allows writers
+ * @kattr: the new mount attributes
+ * @mnt: the mount to which @kattr will be applied
+ *
+ * Check whether thew new mount attributes in @kattr allow concurrent writers.
+ *
+ * Return: true if writers need to be held, false if not
+ */
+static inline bool mnt_allow_writers(const struct mount_kattr *kattr,
+				     const struct mount *mnt)
+{
+	return (!(kattr->attr_set & MNT_READONLY) ||
+		(mnt->mnt.mnt_flags & MNT_READONLY)) &&
+	       !kattr->mnt_userns;
+}
+
 static struct mount *mount_setattr_prepare(struct mount_kattr *kattr,
 					   struct mount *mnt, int *err)
 {
@@ -4405,7 +4422,7 @@ static struct mount *mount_setattr_prepare(struct mount_kattr *kattr,
 #ifdef CONFIG_KDP_NS
 		    !(((struct kdp_mount *)m)->mnt->mnt_flags & MNT_READONLY)) {
 #else
-		    !(m->mnt.mnt_flags & MNT_READONLY)) {
+		    !(mnt_allow_writers(kattr, m)) {
 #endif
 			*err = mnt_hold_writers(m);
 			if (*err)
@@ -4539,9 +4556,9 @@ static int do_mount_setattr(struct path *path, struct mount_kattr *kattr)
 	unlock_mount_hash();
 
 	if (kattr->propagation) {
-		namespace_unlock();
 		if (err)
 			cleanup_group_ids(mnt, NULL);
+		namespace_unlock();
 	}
 
 	return err;

@@ -996,8 +996,10 @@ static void mhi_netdev_remove(struct mhi_device *mhi_dev)
 	free_netdev(mhi_netdev->ndev);
 	mhi_netdev->ndev = NULL;
 
+#ifdef CONFIG_DEBUG_FS
 	if (!IS_ERR_OR_NULL(mhi_netdev->dentry))
 		debugfs_remove_recursive(mhi_netdev->dentry);
+#endif
 
 	if (!mhi_netdev->rsc_parent)
 		mhi_netdev_free_pool(mhi_netdev);
@@ -1145,7 +1147,7 @@ static const struct mhi_netdev_driver_data hw0_308_data = {
 	.interface_name = "rmnet_mhi",
 };
 
-static const struct mhi_netdev_driver_data hw1_308_data = {
+static const struct mhi_netdev_driver_data sw0_308_data = {
 	.mru = 0x4000,
 	.chain_skb = false,
 	.is_rsc_chan = false,
@@ -1164,7 +1166,7 @@ static const struct mhi_netdev_driver_data hw0_rsc_308_data = {
 static const struct mhi_device_id mhi_netdev_match_table[] = {
 	{ .chan = "IP_HW0", .driver_data = (kernel_ulong_t)&hw0_308_data },
 	{ .chan = "IP_HW0_RSC", .driver_data = (kernel_ulong_t)&hw0_rsc_308_data },
-	{ .chan = "IP_SW0", .driver_data = (kernel_ulong_t)&hw1_308_data },
+	{ .chan = "IP_SW0", .driver_data = (kernel_ulong_t)&sw0_308_data },
 	{},
 };
 
@@ -1192,7 +1194,9 @@ module_init(mhi_netdev_init);
 
 static void __exit mhi_netdev_exit(void)
 {
+#ifdef CONFIG_DEBUG_FS
 	debugfs_remove_recursive(dentry);
+#endif
 
 	mhi_driver_unregister(&mhi_netdev_driver);
 }

@@ -189,6 +189,25 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
  */
 #define array3_size(a, b, c)	size_mul(size_mul(a, b), c)
 
+/**
+ * size_add() - Calculate size_t addition with saturation at SIZE_MAX
+ *
+ * @addend1: first addend
+ * @addend2: second addend
+ *
+ * Returns: calculate @addend1 + @addend2, both promoted to size_t,
+ * with any overflow causing the return value to be SIZE_MAX. The
+ * lvalue must be size_t to avoid implicit type conversion.
+ */
+static inline size_t __must_check size_add(size_t addend1, size_t addend2)
+{
+	size_t bytes;
+
+	if (check_add_overflow(addend1, addend2, &bytes))
+		return SIZE_MAX;
+
+	return bytes;
+}
 
 /*
  * Compute a*b+c, returning SIZE_MAX on overflow. Internal helper for

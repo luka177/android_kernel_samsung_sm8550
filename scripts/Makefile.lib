@@ -305,6 +305,9 @@ quiet_cmd_gzip = GZIP    $@
 DTC ?= $(objtree)/scripts/dtc/dtc
 DTC_FLAGS += -Wno-interrupt_provider
 
+# Silence all DTC warnings by default
+DTC_FLAGS += -q
+
 # Disable noisy checks by default
 ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
 DTC_FLAGS += -Wno-unit_address_vs_reg \
@@ -324,8 +327,13 @@ endif
 
 DTC_FLAGS += $(DTC_FLAGS_$(basetarget))
 
+ifeq ($(CONFIG_ARCH_QCOM),y)
+# Forcibly set -@ for all DTB[O]s in case of QCOM targets
+DTC_FLAGS += -@
+else
 # Set -@ if the target is a base DTB that overlay is applied onto
 DTC_FLAGS += $(if $(filter $(patsubst $(obj)/%,%,$@), $(base-dtb-y)), -@)
+endif
 
 # Generate an assembly file to wrap the output of the device tree compiler
 quiet_cmd_dt_S_dtb= DTB     $@

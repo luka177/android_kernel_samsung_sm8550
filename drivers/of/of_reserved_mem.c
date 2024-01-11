@@ -301,6 +301,7 @@ void __init fdt_init_reserved_mem(void)
 		const __be32 *prop;
 		int err = 0;
 		bool nomap, reusable;
+		phys_addr_t end;
 
 		nomap = of_get_flat_dt_prop(node, "no-map", NULL) != NULL;
 		reusable = of_get_flat_dt_prop(node, "reusable", NULL) != NULL;
@@ -329,9 +330,15 @@ void __init fdt_init_reserved_mem(void)
 					reusable = true;
 				}
 #endif
-				memblock_memsize_record(rmem->name, rmem->base,
-							rmem->size, nomap,
-							reusable);
+				end = rmem->base + rmem->size - 1;
+				reusable =
+					(of_get_flat_dt_prop(node, "reusable", NULL)) != NULL;
+
+				pr_info("%pa..%pa (%lu KiB) %s %s %s\n",
+					&rmem->base, &end, (unsigned long)(rmem->size / SZ_1K),
+					nomap ? "nomap" : "map",
+					reusable ? "reusable" : "non-reusable",
+					rmem->name ? rmem->name : "unknown");
 			}
 		}
 	}

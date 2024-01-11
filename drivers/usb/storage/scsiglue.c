@@ -412,9 +412,6 @@ static DEF_SCSI_QCMD(queuecommand)
 /* Command timeout and abort */
 static int command_abort_matching(struct us_data *us, struct scsi_cmnd *srb_match)
 {
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-	printk(KERN_ERR USB_STORAGE "%s scsi_lock +\n", __func__);
-#endif
 	/*
 	 * us->srb together with the TIMED_OUT, RESETTING, and ABORTING
 	 * bits are protected by the host lock.
@@ -425,10 +422,6 @@ static int command_abort_matching(struct us_data *us, struct scsi_cmnd *srb_matc
 	if (!us->srb) {
 		scsi_unlock(us_to_host(us));
 		usb_stor_dbg(us, "-- nothing to abort\n");
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-		printk(KERN_ERR USB_STORAGE "%s -- nothing to abort -\n",
-				__func__);
-#endif
 		return SUCCESS;
 	}
 
@@ -436,10 +429,6 @@ static int command_abort_matching(struct us_data *us, struct scsi_cmnd *srb_matc
 	if (srb_match && us->srb != srb_match) {
 		scsi_unlock(us_to_host(us));
 		usb_stor_dbg(us, "-- pending command mismatch\n");
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-		printk(KERN_ERR USB_STORAGE "%s -- pending command mismatch -\n",
-				__func__);
-#endif
 		return FAILED;
 	}
 
@@ -473,9 +462,6 @@ static int command_abort(struct scsi_cmnd *srb)
 	struct us_data *us = host_to_us(srb->device->host);
 
 	usb_stor_dbg(us, "%s called\n", __func__);
-#ifdef CONFIG_USB_DEBUG_DETAILED_LOG
-	printk(KERN_ERR USB_STORAGE "%s called\n", __func__);
-#endif
 	return command_abort_matching(us, srb);
 }
 

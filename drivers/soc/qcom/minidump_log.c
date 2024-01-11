@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Copyright (c) 2017-2021, The Linux Foundation. All rights reserved.
- * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+ * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
  */
 
 #include <linux/cache.h>
@@ -116,7 +116,7 @@ static bool minidump_ftrace_dump = true;
 static bool md_in_oops_handler;
 static atomic_t md_handle_done;
 static struct seq_buf *md_runq_seq_buf;
-static md_align_offset;
+static int md_align_offset;
 
 /* CPU context information */
 #ifdef CONFIG_QCOM_MINIDUMP_PANIC_CPU_CONTEXT
@@ -1461,3 +1461,5 @@ int msm_minidump_log_init(void)
 #if !IS_MODULE(CONFIG_QCOM_MINIDUMP)
 late_initcall(msm_minidump_log_init)
 #endif
+
+MODULE_IMPORT_NS(MINIDUMP);

@@ -382,7 +382,6 @@ static ssize_t get_dev_desc_store(struct device *dev,
 	struct usb_device_descriptor *descriptor;
 	int ret, port;
 
-	pr_info("lvs: %s\n", __func__);
 	if (!kstrtoint(buf, 0, &port) && port >= 1 && port <= 255) {
 		lvs->portnum = port;
 		lvs->present = true;
