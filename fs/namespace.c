@@ -4422,7 +4422,7 @@ static struct mount *mount_setattr_prepare(struct mount_kattr *kattr,
 #ifdef CONFIG_KDP_NS
 		    !(((struct kdp_mount *)m)->mnt->mnt_flags & MNT_READONLY)) {
 #else
-		    !(mnt_allow_writers(kattr, m)) {
+		    !(mnt_allow_writers(kattr, m))) {
 #endif
 			*err = mnt_hold_writers(m);
 			if (*err)
