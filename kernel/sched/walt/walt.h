@@ -35,28 +35,6 @@
 /* MAX_MARGIN_LEVELS should be one less than MAX_CLUSTERS */
 #define MAX_MARGIN_LEVELS (MAX_CLUSTERS - 1)
 
-struct debug_clock {
-	unsigned int idx;
-	int cpu;
-	int type;
-	u64 rq_clock;
-	u64 sched_clock;
-	u64 ktime;
-	u64 rq_clock_after;
-	u64 window_start;
-	u64 suspend_clock;
-	u64 latest_clock;
-	u64 end;
-	u64 ret;
-	u64 caller0;
-	u64 caller1;
-	u64 caller2;
-	u64 caller3;
-	u32 update_flags;
-	bool lock;
-	bool suspend;
-};
-
 extern bool walt_disabled;
 
 enum task_event {
@@ -986,9 +964,8 @@ static inline bool walt_flag_test(struct task_struct *p, enum walt_flags feature
 	return !!(wts->flags & (1 << feature));
 }
 
-#define WALT_MVP_SLICE		6000000U
-#define WALT_MVP_LIMIT		(2 * WALT_MVP_SLICE)
-#define WALT_MVP_LL_SLICE		30000000U
+#define WALT_MVP_SLICE		3000000U
+#define WALT_MVP_LIMIT		(4 * WALT_MVP_SLICE)
 
 /* higher number, better priority */
 #define WALT_RTG_MVP		0

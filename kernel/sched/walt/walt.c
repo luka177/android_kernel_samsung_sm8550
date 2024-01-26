@@ -23,8 +23,6 @@
 #include <trace/events/power.h>
 #include "walt.h"
 #include "trace.h"
-#include <linux/sec_debug.h>
-
 
 const char *task_event_names[] = {
 	"PUT_PREV_TASK",
@@ -64,19 +62,6 @@ static struct irq_work walt_cpufreq_irq_work;
 struct irq_work walt_migration_irq_work;
 unsigned int walt_rotation_enabled;
 cpumask_t asym_cap_sibling_cpus = CPU_MASK_NONE;
-
-DEFINE_PER_CPU(int, idxp);
-struct debug_clock clk_dbg_0[1024];
-struct debug_clock clk_dbg_1[1024];
-struct debug_clock clk_dbg_2[1024];
-struct debug_clock clk_dbg_3[1024];
-struct debug_clock clk_dbg_4[1024];
-struct debug_clock clk_dbg_5[1024];
-struct debug_clock clk_dbg_6[1024];
-struct debug_clock clk_dbg_7[1024];
-struct debug_clock *clk_dbgp[8] = {clk_dbg_0, clk_dbg_1, clk_dbg_2, clk_dbg_3, clk_dbg_4, clk_dbg_5, clk_dbg_6, clk_dbg_7};
-//DEFINE_PER_CPU(struct debug_clock[1024], clk_dbgp);
-bool enable_logging;
 
 unsigned int __read_mostly sched_ravg_window = 20000000;
 int min_possible_cluster_id;
@@ -2450,7 +2435,7 @@ static void mark_task_starting(struct task_struct *p)
 	struct walt_task_struct *wts = (struct walt_task_struct *) p->android_vendor_data1;
 	u64 wallclock = walt_rq_clock(rq);
 
-	wts->mark_start = wts->last_wake_ts = wallclock;
+	wts->last_wake_ts = wallclock;
 	wts->last_enqueued_ts = wallclock;
 	wts->mark_start_birth_ts = wallclock;
 
@@ -3262,8 +3247,6 @@ static void walt_update_tg_pointer(struct cgroup_subsys_state *css)
 	if (!strcmp(css->cgroup->kn->name, "top-app"))
 		walt_init_topapp_tg(css_tg(css));
 	else if (!strcmp(css->cgroup->kn->name, "foreground"))
-		walt_init_foreground_tg(css_tg(css));
-	else if (!strcmp(css->cgroup->kn->name, "foreground-boost"))
 		walt_init_foreground_tg(css_tg(css));
 	else
 		walt_init_tg(css_tg(css));
@@ -4785,8 +4768,6 @@ static void android_rvh_try_to_wake_up(void *unused, struct task_struct *p)
 	if (unlikely(walt_disabled))
 		return;
 	rq_lock_irqsave(rq, &rf);
-	if (!raw_spin_is_locked(&rq->__lock))
-		pr_info("[%s] %px (%d) %d\n", __func__, rq, rq->cpu, atomic_read(&rq->__lock.raw_lock.val));
 	old_load = task_load(p);
 	wallclock = walt_sched_clock();
 
@@ -4813,7 +4794,6 @@ static void android_rvh_tick_entry(void *unused, struct rq *rq)
 	if (unlikely(walt_disabled))
 		return;
 
-	lockdep_assert_held(&rq->__lock);
 	walt_lockdep_assert_rq(rq, NULL);
 	wallclock = walt_rq_clock(rq);
 
@@ -4858,9 +4838,6 @@ static void android_rvh_schedule(void *unused, struct task_struct *prev,
 
 	if (unlikely(walt_disabled))
 		return;
-
-	if (!raw_spin_is_locked(&rq->__lock))
-		pr_info("[%s] %px (%d) %x\n", __func__, rq, rq->cpu, atomic_read(&rq->__lock.raw_lock.val));
 
 	wallclock = walt_rq_clock(rq);
 
@@ -5094,43 +5071,6 @@ static void walt_init_tg_pointers(void)
 	rcu_read_unlock();
 }
 
-#if IS_ENABLED(CONFIG_RQ_STAT_SHOW)
-static int rq_stat_show(struct seq_file *m, void *data)
-{
-	int cpu;
-	char buf[64];
-	int len = 0;
-	int g_gp_sum = 0;
-	int s_sum = 0;
-
-	for_each_possible_cpu(cpu) {
-		struct rq *rq = cpu_rq(cpu);
-		//len += snprintf(buf + len, 64 - len, "%u ", rq->nr_running);
-		if (!is_min_cluster_cpu(cpu))
-			g_gp_sum += rq->nr_running;
-		else
-			s_sum += rq->nr_running;
-	}
-	len += snprintf(buf + len, 64 - len, "%u ", s_sum);
-	len += snprintf(buf + len, 64 - len, "%u ", g_gp_sum);
-	seq_printf(m, "%s\n", buf);
-
-	return 0;
-}
-
-static int rq_stat_open(struct inode *inode, struct file *file)
-{
-	return single_open(file, rq_stat_show, NULL);
-}
-
-static const struct proc_ops proc_rq_stat_op = {
-	.proc_open = rq_stat_open,
-	.proc_read = seq_read,
-	.proc_lseek = seq_lseek,
-	.proc_release = single_release,
-};
-#endif
-
 static void walt_init(struct work_struct *work)
 {
 	struct ctl_table_header *hdr;
@@ -5143,9 +5083,6 @@ static void walt_init(struct work_struct *work)
 	if (atomic_cmpxchg(&already_inited, 0, 1))
 		return;
 
-	enable_logging = !!sec_debug_is_enabled();
-	pr_info("[%s] logging : %s\n", __func__, enable_logging ? "enabled" : "disabled");
-	
 	walt_tunables();
 
 	register_syscore_ops(&walt_syscore_ops);
@@ -5194,10 +5131,6 @@ static void walt_init(struct work_struct *work)
 	walt_boost_init();
 	waltgov_register();
 
-#if IS_ENABLED(CONFIG_RQ_STAT_SHOW)
-	if (!proc_create("rq_stat", 0444, NULL, &proc_rq_stat_op))
-		pr_err("Failed to register proc interface 'rq_stat'\n");
-#endif
 	i = match_string(sched_feat_names, __SCHED_FEAT_NR, "TTWU_QUEUE");
 	if (i >= 0) {
 		static_key_disable(&sched_feat_keys[i]);
@@ -5238,15 +5171,4 @@ MODULE_LICENSE("GPL v2");
 
 #if IS_ENABLED(CONFIG_SCHED_WALT_DEBUG)
 MODULE_SOFTDEP("pre: sched-walt-debug");
-#endif
-
-#if IS_ENABLED(CONFIG_SEC_QC_SUMMARY)
-#include <linux/samsung/debug/qcom/sec_qc_summary.h>
-
-void sec_qc_summary_set_sched_walt_info(struct sec_qc_summary_data_apss *apss)
-{
-	apss->aplpm.num_clusters = num_sched_clusters;
-	apss->aplpm.p_cluster = virt_to_phys(sched_cluster);
-}
-EXPORT_SYMBOL(sec_qc_summary_set_sched_walt_info);
 #endif
