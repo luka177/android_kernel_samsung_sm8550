@@ -294,4 +294,9 @@ source "drivers/mfd/slsi/s2mpb02/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT 
 source "drivers/input/sec_input/stm_fst2ca78y_spi/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 source "drivers/battery/charger/pca9481_charger/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 source "drivers/input/sec_input/stm_spi/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+config SEC_PLATFORM
+	string "Samsung platform name"
+	default ""
+	help
+	  Used by common drivers that have platform specif quirks.
 endmenu
