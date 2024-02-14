@@ -240,4 +240,5 @@ obj-y += input/sec_input/stm_fst2ba61y_i2c/ # ADDED BY LEGO AUTOMATICALLY: DO NO
 obj-y += mfd/slsi/s2mpb02/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += input/sec_input/stm_fst2ca78y_spi/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += battery/charger/pca9481_charger/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+obj-y += sensors/vl53l8/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += input/sec_input_old/stm_spi/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
