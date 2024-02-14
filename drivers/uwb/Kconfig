@@ -15,6 +15,12 @@ config UWB_SR100
 	help
 	  NXP SR100 UWB controller support.
 
+config UWB_SR200
+	bool "Nxp SPI driver for SR200 devices"
+	default n
+	help
+	  NXP SR200 UWB controller support.
+
 config SEC_UWB_LOGGER
 	bool "UWB logger"
 	default n
