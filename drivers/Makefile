@@ -219,6 +219,7 @@ obj-y += usb/typec/common/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += sti/abc/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += battery/fuelgauge/max77705_fuelgauge/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += battery/charger/pca9468_charger/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+obj-y += battery/charger/pca9481_charger/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += input/misc/hall/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += optics/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += mfd/maxim/max17333/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT

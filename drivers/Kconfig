@@ -274,6 +274,7 @@ source "drivers/usb/typec/common/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT 
 source "drivers/sti/abc/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 source "drivers/battery/fuelgauge/max77705_fuelgauge/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 source "drivers/battery/charger/pca9468_charger/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+source "drivers/battery/charger/pca9481_charger/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 source "drivers/input/misc/hall/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 source "drivers/optics/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 source "drivers/mfd/maxim/max17333/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
