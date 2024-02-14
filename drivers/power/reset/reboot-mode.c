@@ -10,10 +10,11 @@
 #include <linux/of.h>
 #include <linux/reboot.h>
 #include <linux/reboot-mode.h>
-#include <linux/slab.h>
 #include <linux/string.h>
+#include <linux/slab.h>
 
 #define PREFIX "mode-"
+#define MAX_REBOOT_REASON_LEN 30
 
 struct mode_info {
 	const char *mode;
@@ -42,25 +43,25 @@ static unsigned int get_reboot_mode_magic(struct reboot_mode_driver *reboot,
 }
 
 static int reboot_mode_notify(struct notifier_block *this,
-			      unsigned long mode, void *__cmd)
+			      unsigned long mode, void *cmd)
 {
 	struct reboot_mode_driver *reboot;
 	unsigned int magic;
-	char *cmd = NULL;
+	char *reason = NULL;
 
-	if (__cmd)
-		cmd = kstrdup(__cmd, GFP_KERNEL);
+	if (cmd) {
+		reason = kmalloc(MAX_REBOOT_REASON_LEN, GFP_KERNEL);
+		strscpy(reason, (char *)cmd, MAX_REBOOT_REASON_LEN);
+	}
 
 	/* Before comparing to modes retrieved via DT, replace ' ' by '-' */
-	if (cmd && strnstr((char *)cmd, " ", strlen((char *)cmd)))
-		strreplace((char *)cmd, ' ', '-');
+	if (reason && strnstr(reason, " ", strlen(reason)))
+		strreplace(reason, ' ', '-');
 
 	reboot = container_of(this, struct reboot_mode_driver, reboot_notifier);
-	magic = get_reboot_mode_magic(reboot, cmd);
+	magic = get_reboot_mode_magic(reboot, reason);
 	if (magic)
 		reboot->write(reboot, magic);
-
-	kfree(cmd);
 
 	return NOTIFY_DONE;
 }
