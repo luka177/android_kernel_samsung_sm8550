@@ -63,7 +63,7 @@
 
 #if IS_ENABLED(CONFIG_TABLET_MODEL_CONCEPT)
 #if IS_ENABLED(CONFIG_KEYBOARD_STM32_POGO_V3)
-#include "../input/sec_input/stm32/pogo_notifier_v3.h"
+#include "../input/sec_input_old/stm32/pogo_notifier_v3.h"
 #elif IS_ENABLED(CONFIG_KEYBOARD_STM32_POGO_V2) || IS_ENABLED(CONFIG_KEYBOARD_STM32_POGO)
 #include <linux/input/pogo_i2c_notifier.h>
 #endif
