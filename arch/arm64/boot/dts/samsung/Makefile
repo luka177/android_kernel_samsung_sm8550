@@ -4,6 +4,8 @@ ifeq ($(CONFIG_SEC_PLATFORM),"dm1q")
 dts-dirs += diamond/dm1q
 else ifeq ($(CONFIG_SEC_PLATFORM),"dm3q")
 dts-dirs += diamond/dm3q
+else ifeq ($(CONFIG_SEC_PLATFORM),"gts9wifi")
+dts-dirs += galaxytab/gts9wifi
 else ifeq ($(CONFIG_SEC_PLATFORM),"q5q")
 dts-dirs += foldable/q5q
 endif
