@@ -33,11 +33,11 @@
 
 #ifdef POGO_NOTIFIER_ENABLED
 #if IS_ENABLED(CONFIG_KEYBOARD_STM32_POGO_V3)
-#include "../../sec_input/stm32/pogo_notifier_v3.h"
-#include "../../sec_input/stm32/stm32_pogo_v3.h"
+#include "../../sec_input_old/stm32/pogo_notifier_v3.h"
+#include "../../sec_input_old/stm32/stm32_pogo_v3.h"
 #else
 #include <linux/input/pogo_i2c_notifier.h>
-#include "../../sec_input/stm32/stm32_pogo_i2c.h"
+#include "../../sec_input_old/stm32/stm32_pogo_i2c.h"
 #endif
 #endif
 
