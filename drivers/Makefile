@@ -197,6 +197,7 @@ obj-y += vibrator/common/vib_info/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += misc/drb/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += uwb/uwb_logger/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += sec_panel_notifier/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+obj-y += sec_panel_notifier_v2/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += net/dropdump/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += usb/common/vbus_notifier/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += battery/charger/max77705_charger/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
@@ -205,23 +206,42 @@ obj-y += vibrator/common/inputff/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += muic/common/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += kperfmon/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += usb/typec/manager/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+ifeq ($(CONFIG_SEC_PLATFORM_Q5Q), y)
+obj-y += input/sec_input_q5q/
+else
 obj-y += input/sec_input/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+endif
+obj-y += input/misc/hall/akm/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+obj-y += input/sec_input_q5q/stm_fst3ca60y_i2c/
+obj-y += input/sec_input_q5q/stm_fst2ba61y_i2c/
+obj-y += input/sec_input_q5q/stm_fst2ca78y_spi/
 obj-y += fingerprint/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += firmware/cirrus/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += input/input_boost/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += usb/typec/common/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += sti/abc/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += battery/charger/pca9481_charger/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+obj-y += battery/charger/pca9468_charger/
+ifeq ($(CONFIG_SEC_PLATFORM_Q5Q), y)
+obj-y += vibrator/cs/cs40l26_mainline/
+else
 obj-y += vibrator/cs/cs40l26/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+endif
 obj-y += input/misc/hall/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += optics/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += battery/fuelgauge/max77705_fuelgauge/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += mfd/maxim/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += regulator/s2mpb03/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += battery/common/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+obj-y += battery/limiter/max17333_limiter/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += nfc/snvm/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += regulator/s2dos05/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
-obj-y += input/wacom/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+obj-y += mfd/maxim/max17333/
+ifeq ($(CONFIG_SEC_PLATFORM_Q5Q), y)
+obj-y += input/wacom_wez01/
+else
+obj-y += input/wacom/
+endif
 obj-y += usb/typec/maxim/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += regulator/s2mpb02/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 ifneq ($(CONFIG_SEC_PLATFORM_DM1Q), y)
