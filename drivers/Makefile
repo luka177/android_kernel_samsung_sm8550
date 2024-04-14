@@ -216,7 +216,11 @@ obj-y += input/sec_input_q5q/stm_fst3ca60y_i2c/
 obj-y += input/sec_input_q5q/stm_fst2ba61y_i2c/
 obj-y += input/sec_input_q5q/stm_fst2ca78y_spi/
 obj-y += fingerprint/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+ifeq ($(CONFIG_SEC_PLATFORM_Q5Q), y)
+obj-y += firmware/cirrus_mainline/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+else
 obj-y += firmware/cirrus/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+endif
 obj-y += input/input_boost/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += usb/typec/common/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 obj-y += sti/abc/ # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT

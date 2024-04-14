@@ -270,6 +270,7 @@ source "drivers/input/sec_input_q5q/stm_fst2ba61y_i2c/Kconfig"
 source "drivers/input/sec_input_q5q/stm_fst2ca78y_spi/Kconfig"
 source "drivers/fingerprint/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 source "drivers/firmware/cirrus/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
+source "drivers/firmware/cirrus_mainline/Kconfig"
 source "drivers/input/input_boost/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 source "drivers/usb/typec/common/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
 source "drivers/sti/abc/Kconfig" # ADDED BY LEGO AUTOMATICALLY: DO NOT SUBMIT
